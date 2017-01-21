@@ -8,4 +8,4 @@ def app(environ, start_response):
 			("Content-Type", "text/plain"),
 			("Content-Length", str(len(data)))
 		])
-	return [bytes(data, "UTF-8")]
+	return [bytes(data, "UTF-8")] # if python 2.7 - no bytes() function here
