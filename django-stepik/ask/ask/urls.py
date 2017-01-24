@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 # from django.contrib import admin
-from ask.views import test
+from ask.views import test, my_test
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -26,4 +26,8 @@ urlpatterns = [
     url(r'^ask/', test),
     url(r'^popular/', test),
     url(r'^new/', test),
+
+    url(r'^my/(\d+)$', my_test),
+    url(r'^my2/(?P<pk>\d+)$', my_test),
+
 ]
