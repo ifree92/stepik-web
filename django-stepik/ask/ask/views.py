@@ -11,8 +11,6 @@ def test(request):
 @csrf_exempt
 @require_GET
 def my_test(request, *args, **kwargs):
-
-
     response = HttpResponse(
         content="полный финиш, господа",
         content_type="text/html",
