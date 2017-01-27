@@ -1,3 +1,11 @@
-A
-{% block A %}B{% endblock %}
-C
+<!doctype html>
+<html lang="en">
+<head>
+    {% block hreader %}{% endblock %}
+</head>
+<body>
+    {% block body %}
+        <script src="/static/js/main.js"></script>
+    {% endblock %}
+</body>
+</html>
