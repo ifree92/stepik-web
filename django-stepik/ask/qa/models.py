@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class QuestionManager(models.Manager):
 
+class QuestionManager(models.Manager):
     def new(self):
         return Question.objects.order_by('-added_at')
 
@@ -26,3 +26,16 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, null=False, on_delete=models.CASCADE)
     author = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
 
+
+# for testing
+
+class Author(models.Model):
+    rating = models.IntegerField()
+    name = models.CharField(max_length=50)
+
+
+class Article(models.Model):
+    author = models.ForeignKey(Author)
+    text = models.TextField()
+
+# /for testing
