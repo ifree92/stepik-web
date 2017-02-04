@@ -29,5 +29,4 @@ urlpatterns = [
 
     url(r'^my/(\d+)$', my_test),
     url(r'^my2/(?P<pk>\d+)$', my_test),
-
 ]

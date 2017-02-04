@@ -25,17 +25,3 @@ class Answer(models.Model):
     added_at = models.DateTimeField()
     question = models.ForeignKey(Question, null=False, on_delete=models.CASCADE)
     author = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
-
-
-# for testing
-
-class Author(models.Model):
-    rating = models.IntegerField()
-    name = models.CharField(max_length=50)
-
-
-class Article(models.Model):
-    author = models.ForeignKey(Author)
-    text = models.TextField()
-
-# /for testing
