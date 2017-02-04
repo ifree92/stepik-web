@@ -4,7 +4,7 @@ import django
 import lorem
 import random
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 # sys.path.append("G:\\Projects\\stepik-web\\django-stepik\\ask")
 
@@ -38,7 +38,10 @@ def __randomDate(start, end, prop):
 
 
 def get_random_datetime():
-    return datetime.strptime(randomDate("1/1/2016 1:30 PM", "1/1/2009 4:50 AM", random.random()), '%m/%d/%Y %I:%M %p')
+    return datetime.strptime(
+        __randomDate("1/1/2016 1:30 PM", "1/1/2009 4:50 AM", random.random()), '%m/%d/%Y %I:%M %p'
+    ).astimezone(timezone.utc)
+
 
 # =============== /helpers ================
 
@@ -79,12 +82,31 @@ def create_questions(users):
                          author=user
                          )
             q.save()
+            print(q, "created")
+            rand_users_count = random.randrange(0, 10)
+            for _rand_user in get_random_users(users, rand_users_count):
+                q.likes.add(_rand_user)
+            print("likes", rand_users_count, "created")
+            create_answers(q, users)
 
 
+def create_answers(question, users):
+    users_comment = get_random_users(users, random.randrange(0, 10))
+    for user_com in users_comment:
+        Answer(text=lorem.paragraph(),
+               question=question,
+               author=user_com
+               ).save()
+    print("answers", len(users_comment), "created")
 
 
+def remove_all_data():
+    pass
 # =============== additional functions ==================
 
 users = create_users()
+create_questions(users)
+# remove_users(users)
 
-remove_users(users)
+# for i in range(10):
+#     print(get_random_datetime())
