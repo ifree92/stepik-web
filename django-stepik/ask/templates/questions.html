@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block header %}
+    {{ block.super }}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ title }}</h1>
+    <h4>Page: {{ page }}</h4>
+    {% for question in questions %}
+        <a href="/question/{{ question.id }}/"><h2>{{ question.title }}</h2></a>
+        <strong>Date</strong>: {{ question.added_at }}
+        <strong>Rate</strong>: {{ question.rating }}
+        <p>{{ question.text }}</p>
+    {% endfor %}
+
+
+    {% for p in paginator.page_range %}
+        {% if p == page.number %}
+            <strong>
+        {% endif %}
+
+        <a href="{{ paginator.base_url }}{{ p }}">{{ p }}</a>
+
+        {% if p == page.number %}
+            </strong>
+        {% endif %}
+    {% endfor %}
+
+    {{ block.super }}
+{% endblock %}

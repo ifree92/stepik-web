@@ -24,7 +24,7 @@ urlpatterns = [
 
     url(r'^$', questions_main_newer),
     url(r'^popular/', questions_popular),
-    url(r'^question/(?P<question>\d+)/$', question_viewer),
+    url(r'^question/(?P<id_question>\d+)/$', question_viewer),
 
 
     url(r'^login/', test),

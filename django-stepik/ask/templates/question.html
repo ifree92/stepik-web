@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block header %}
+    {{ block.super }}
+    <title>{{ title }}</title>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ question.title }}</h1>
+    <strong>Date</strong>: {{ question.added_at }}
+    <strong>Rate</strong>: {{ question.rating }}
+    <string>Author:</string>: {{ question.author }}
+    <p>{{ question.text }}</p>
+    {{ block.super }}
+{% endblock %}

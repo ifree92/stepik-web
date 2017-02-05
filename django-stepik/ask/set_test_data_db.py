@@ -59,7 +59,7 @@ def get_random_users(users, count):
 def create_users():
     users = list()
     for __i in range(10):
-        _user = User.objects.create_user("username_" + str(__i))
+        _user = User.objects.create_user("username_" + str(__i), password="12345678")
         users.append(_user)
         print(str(_user) + " created")
     return users
