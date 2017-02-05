@@ -10,6 +10,11 @@ class QuestionManager(models.Manager):
         return Question.objects.order_by('-rating')
 
 
+class AnswerManager(models.Manager):
+    def from_old_to_new_by_question(self, question):
+        return Answer.objects.order_by('added_at').filter(question=question)
+
+
 class Question(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
@@ -25,3 +30,4 @@ class Answer(models.Model):
     added_at = models.DateTimeField(blank=True, auto_now_add=True)
     question = models.ForeignKey(Question, null=False, on_delete=models.CASCADE)
     author = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
+    objects = AnswerManager()

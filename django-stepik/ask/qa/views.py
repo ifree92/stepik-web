@@ -49,9 +49,11 @@ def questions_popular(request):
 @require_GET
 def question_viewer(request, id_question):
     question = get_object_or_404(Question, id=id_question)
+    answers = get_list_or_404(Answer.objects.from_old_to_new_by_question(question))
     return render(request, "question.html", {
         "title": question.title,
-        "question": question
+        "question": question,
+        "answers": answers
     })
 
 

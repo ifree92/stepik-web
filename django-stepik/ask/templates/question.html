@@ -10,5 +10,12 @@
     <strong>Rate</strong>: {{ question.rating }}
     <string>Author:</string>: {{ question.author }}
     <p>{{ question.text }}</p>
+    <hr>
+    <h2>Comments:</h2>
+    {% for answer in answers %}
+        <strong>Author: </strong>{{ answer.author }}
+        <strong>Date: </strong>{{ answer.added_at }}
+        <p>{{ answer.text }}</p>
+    {% endfor %}
     {{ block.super }}
 {% endblock %}
