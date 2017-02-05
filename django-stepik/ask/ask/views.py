@@ -12,7 +12,7 @@ def test(request):
 @require_GET
 def my_test(request, *args, **kwargs):
     response = HttpResponse(
-        content="полный финиш, господа",
+        content="this is finish",
         content_type="text/html",
         status=200
     )
