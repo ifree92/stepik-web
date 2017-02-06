@@ -9,14 +9,7 @@ from qa.models import Question, Answer
 @require_GET
 def questions_main_newer(request):
     page = request.GET.get("page", 1)
-    if int(page) <= 0:
-        page = 1
-    qs_questions = get_list_or_404(Question.objects.new())
-    paginator = Paginator(qs_questions, 10)
-    try:
-        page = paginator.page(page)
-    except EmptyPage:
-        page = paginator.page(paginator.num_pages)
+    page, paginator = Question.objects.new_paginator(page)
     paginator.base_url = "/?page="
     return render(request, "questions.html", {
         "title": "User's questions",
@@ -29,14 +22,7 @@ def questions_main_newer(request):
 @require_GET
 def questions_popular(request):
     page = request.GET.get("page", 1)
-    if int(page) <= 0:
-        page = 1
-    qs_questions = get_list_or_404(Question.objects.popular())
-    paginator = Paginator(qs_questions, 10)
-    try:
-        page = paginator.page(page)
-    except EmptyPage:
-        page = paginator.page(paginator.num_pages)
+    page, paginator = Question.objects.popular_paginator(page)
     paginator.base_url = "/popular/?page="
     return render(request, "questions.html", {
         "title": "User's questions",

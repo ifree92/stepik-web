@@ -1,13 +1,37 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.core.paginator import Paginator, EmptyPage
+from django.shortcuts import get_object_or_404, get_list_or_404
 
 
 class QuestionManager(models.Manager):
     def new(self):
         return Question.objects.order_by('-added_at')
 
+    def new_paginator(self, page):
+        if int(page) <= 0:
+            page = 1
+        qs_questions = get_list_or_404(Question.objects.new())
+        paginator = Paginator(qs_questions, 10)
+        try:
+            page = paginator.page(page)
+        except EmptyPage:
+            page = paginator.page(paginator.num_pages)
+        return page, paginator
+
     def popular(self):
         return Question.objects.order_by('-rating')
+
+    def popular_paginator(self, page):
+        if int(page) <= 0:
+            page = 1
+        qs_questions = get_list_or_404(Question.objects.popular())
+        paginator = Paginator(qs_questions, 10)
+        try:
+            page = paginator.page(page)
+        except EmptyPage:
+            page = paginator.page(paginator.num_pages)
+        return page, paginator
 
 
 class AnswerManager(models.Manager):
