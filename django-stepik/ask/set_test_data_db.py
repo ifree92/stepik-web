@@ -102,6 +102,8 @@ def create_answers(question, users):
 
 def remove_all_data():
     pass
+
+
 # =============== additional functions ==================
 
 users = create_users()
