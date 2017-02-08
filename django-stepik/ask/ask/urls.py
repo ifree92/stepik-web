@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 # from django.contrib import admin
 from ask.views import test, my_test
-from qa.views import questions_main_newer, questions_popular, question_viewer
+from qa.views import questions_main_newer, questions_popular, question_viewer, feedback
 
 
 urlpatterns = [
@@ -34,4 +34,5 @@ urlpatterns = [
 
     url(r'^my/(\d+)$', my_test),
     url(r'^my2/(?P<pk>\d+)$', my_test),
+    url(r'feedback/$', feedback),
 ]

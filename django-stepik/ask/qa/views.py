@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_GET
 from django.shortcuts import get_object_or_404, get_list_or_404, render
 from django.core.paginator import Paginator, EmptyPage
-from qa.models import Question, Answer
+from .models import Question, Answer
+from .forms import FeedbackForm
 
 
 @require_GET
@@ -41,6 +42,22 @@ def question_viewer(request, id_question):
         "question": question,
         "answers": answers
     })
+
+
+def feedback(request):
+    if request.method == "POST":
+        print("request.POST", request.POST)
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback_post = form.save()
+            url = form.get_url()
+            return HttpResponseRedirect(url)
+    else:
+        form = FeedbackForm
+        return render(request, "feedback.html", {
+            "title": "Feedback form",
+            "form": form
+        })
 
 
 def test(request, num=""):

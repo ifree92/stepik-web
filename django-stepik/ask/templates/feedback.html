@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <title>{{ title }}</title>
+    {{ block.super }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ title }}</h1>
+    <form action="/feedback/" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Send</button>
+    </form>
+    {{ block.super }}
+{% endblock %}
