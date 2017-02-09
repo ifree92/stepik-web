@@ -83,7 +83,7 @@ def question_viewer(request, id_question):
             return HttpResponseRedirect("/question/" + str(form.cleaned_data["question"]) + "/")
         else:
             question = get_object_or_404(Question, id=id_question)
-            answers = get_list_or_404(Answer.objects.from_old_to_new_by_question(question))
+            answers = Answer.objects.from_old_to_new_by_question(question)
             form_answer = AnswerForm(initial={"question": id_question})
             return render(request, "question.html", {
                 "title": question.title,
