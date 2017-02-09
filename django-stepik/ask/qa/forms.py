@@ -1,6 +1,8 @@
 from django import forms
 from .models import Feedback, Question, Answer
 from django.contrib.auth.models import User
+from django.utils import timezone
+import random
 
 
 class FeedbackForm(forms.Form):
@@ -33,8 +35,28 @@ class FeedbackForm(forms.Form):
 
 
 class AskForm(forms.Form):
-    title = forms.CharField(max_length=100)
-    text = forms.CharField(widget=forms.Textarea)
+    title = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}), max_length=100)
+    text = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control"}))
+
+    def clean_title(self):
+        title = self.cleaned_data["title"]
+        if len(title) == 0:
+            raise forms.ValidationError("Title cannot be empty", code="title_error")
+        return title
+
+    def clean_text(self):
+        text = self.cleaned_data["text"]
+        if len(text) == 0:
+            raise forms.ValidationError("Text cannot be empty", code="text_error")
+        return text
+
+    def save(self):
+        title = self.cleaned_data["title"]
+        text = self.cleaned_data["text"]
+        q = Question(title=title, text=text, added_at=timezone.now(), rating=random.randint(0, 100),
+                     author=User.objects.get(id=1))
+        q.save()
+        return q.id
 
 
 class AnswerForm(forms.Form):

@@ -33,10 +33,32 @@ def questions_popular(request):
     })
 
 
+def ask(request):
+    if request.method == "GET":
+        ask_form = AskForm()
+        return render(request, "ask.html", {
+            "title": "Ask a question",
+            "ask_form": ask_form
+        })
+    if request.method == "POST":
+        ask_form = AskForm(request.POST)
+        if ask_form.is_valid():
+            question_id = ask_form.save()
+            return HttpResponseRedirect("/question/" + str(question_id) + "/")
+        else:
+            ask_form = AskForm()
+            return render(request, "ask.html", {
+                "title": "Ask a question",
+                "ask_form": ask_form
+            })
+    else:
+        raise Http404()
+
+
 def question_viewer(request, id_question):
     if request.method == "GET":
         question = get_object_or_404(Question, id=id_question)
-        answers = get_list_or_404(Answer.objects.from_old_to_new_by_question(question))
+        answers = Answer.objects.from_old_to_new_by_question(question)
         form_answer = AnswerForm(initial={"question": id_question})
 
         return render(request, "question.html", {
