@@ -50,6 +50,9 @@ class AskForm(forms.Form):
             raise forms.ValidationError("Text cannot be empty", code="text_error")
         return text
 
+    def clean(self):
+        return self.cleaned_data
+
     def save(self):
         title = self.cleaned_data["title"]
         text = self.cleaned_data["text"]
