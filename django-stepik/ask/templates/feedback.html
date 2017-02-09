@@ -6,11 +6,28 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ title }}</h1>
-    <form action="/feedback/" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Send</button>
-    </form>
+    <div class="container">
+        <h1 class="text-center">{{ title }}</h1>
+        <form action="/feedback/" method="post" class="form-horizontal">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ field.label }}</label>
+                    <div class="col-sm-10">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                        {% for ferr in field.errors %}
+                            <div class="alert alert-danger">{{ ferr }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="form-actions text-center">
+                <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </form>
+    </div>
     {{ block.super }}
 {% endblock %}

@@ -13,7 +13,7 @@ def questions_main_newer(request):
     page, paginator = Question.objects.new_paginator(page)
     paginator.base_url = "/?page="
     return render(request, "questions.html", {
-        "title": "User's questions",
+        "title": "User's questions sorted by date",
         "questions": page.object_list,
         "page": page,
         "paginator": paginator
@@ -26,7 +26,7 @@ def questions_popular(request):
     page, paginator = Question.objects.popular_paginator(page)
     paginator.base_url = "/popular/?page="
     return render(request, "questions.html", {
-        "title": "User's questions",
+        "title": "User's questions sorted by rating",
         "questions": page.object_list,
         "page": page,
         "paginator": paginator
@@ -52,6 +52,11 @@ def feedback(request):
             feedback_post = form.save()
             url = form.get_url()
             return HttpResponseRedirect(url)
+        else:
+            return render(request, "feedback.html", {
+                "title": "Feedback form",
+                "form": form
+            })
     else:
         form = FeedbackForm
         return render(request, "feedback.html", {

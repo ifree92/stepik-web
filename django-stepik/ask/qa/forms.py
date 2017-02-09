@@ -2,8 +2,8 @@ from django import forms
 
 
 class FeedbackForm(forms.Form):
-    email = forms.EmailField(max_length=100, label="Ваша почта")
-    message = forms.CharField(widget=forms.Textarea, label="Сообщение")
+    email = forms.EmailField(max_length=100, label="Ваша почта", widget=forms.TextInput(attrs={"class": "form-control"}))
+    message = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control"}), label="Сообщение")
 
     def clean_email(self):
         print("[FeedbackForm]", "clean_email")
