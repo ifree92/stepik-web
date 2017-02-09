@@ -41,12 +41,14 @@ class AskForm(forms.Form):
     def clean_title(self):
         title = self.cleaned_data["title"]
         if len(title) == 0:
+            print("AskForm clean_title raise ValidationError");
             raise forms.ValidationError("Title cannot be empty", code="title_error")
         return title
 
     def clean_text(self):
         text = self.cleaned_data["text"]
         if len(text) == 0:
+            print("AskForm clean_text raise ValidationError");
             raise forms.ValidationError("Text cannot be empty", code="text_error")
         return text
 
