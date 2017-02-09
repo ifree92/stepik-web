@@ -46,10 +46,12 @@ def ask(request):
         print("POST ask", request.POST)
         ask_form = AskForm(request.POST)
         if ask_form.is_valid():
+            print("POST ask is VALID")
             question_id = ask_form.save()
             return HttpResponseRedirect("/question/" + str(question_id) + "/")
         else:
             ask_form = AskForm()
+            print("POST ask is INVALID")
             return render(request, "ask.html", {
                 "title": "Ask a question",
                 "ask_form": ask_form
