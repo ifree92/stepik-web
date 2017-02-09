@@ -6,9 +6,9 @@ import random
 
 
 class FeedbackForm(forms.Form):
-    email = forms.EmailField(max_length=100, label="Ваша почта",
+    email = forms.EmailField(max_length=100, label="Your mail",
                              widget=forms.TextInput(attrs={"class": "form-control"}))
-    message = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control"}), label="Сообщение")
+    message = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control"}), label="Message")
 
     def clean_email(self):
         email = self.cleaned_data["email"]
