@@ -5,27 +5,75 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ title }}</h1>
-    <h4>Page: {{ page }}</h4>
-    {% for question in questions %}
-        <a href="/question/{{ question.id }}/"><h2>{{ question.title }}</h2></a>
-        <strong>Date</strong>: {{ question.added_at }}
-        <strong>Rate</strong>: {{ question.rating }}
-        <p>{{ question.text }}</p>
-    {% endfor %}
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <h4>Page: {{ page }}</h4>
+        {% for question in questions %}
+            <a href="/question/{{ question.id }}/"><h2>{{ question.title }}</h2></a>
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Date</strong>: {{ question.added_at }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Rate</strong>: {{ question.rating }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Author</strong>: {{ question.author }}
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>{{ question.text }}</p>
+                </div>
+            </div>
+        {% endfor %}
 
 
-    {% for p in paginator.page_range %}
-        {% if p == page.number %}
-            <strong>
-        {% endif %}
+        <nav aria-label="Page navigation" class="text-center">
+            <ul class="pagination">
+                {% if not page.has_previous %}
+                    <li class="disabled">
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ paginator.base_url }}{{ page.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
 
-        <a href="{{ paginator.base_url }}{{ p }}">{{ p }}</a>
+                {% for p in paginator.page_range %}
+                    {% if p == page.number %}
+                        <li class="active">
+                            {% else %}
+                        <li>
+                    {% endif %}
 
-        {% if p == page.number %}
-            </strong>
-        {% endif %}
-    {% endfor %}
+                <a href="{{ paginator.base_url }}{{ p }}">{{ p }}</a>
+                </li>
+                {% endfor %}
+                {% if not page.has_next %}
+                    <li class="disabled">
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ paginator.base_url }}{{ page.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+    </div>
+
 
     {{ block.super }}
 {% endblock %}

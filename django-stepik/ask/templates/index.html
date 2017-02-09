@@ -5,11 +5,14 @@
 {% endblock %}
 
 {% block body %}
-    <h2>{{ caption }}</h2>
-    <p>{{ text }}</p>
-    {% for item_menu in menu %}
-        <li>{{ item_menu }}</li>
-    {% endfor %}
+    <div class="container">
+        <h2>{{ caption }}</h2>
+        <p>{{ text }}</p>
+        {% for item_menu in menu %}
+            <li>{{ item_menu }}</li>
+        {% endfor %}
+    </div>
+
     {{ block.super }}
 
 {% endblock %}
