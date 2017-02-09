@@ -55,3 +55,8 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, null=False, on_delete=models.CASCADE)
     author = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
     objects = AnswerManager()
+
+
+class Feedback(models.Model):
+    email = models.CharField(max_length=255)
+    text = models.TextField()

@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views.decorators.http import require_GET
 from django.shortcuts import get_object_or_404, get_list_or_404, render
 from django.core.paginator import Paginator, EmptyPage
 from .models import Question, Answer
-from .forms import FeedbackForm
+from .forms import FeedbackForm, AnswerForm, AskForm
 
 
 @require_GET
@@ -33,15 +33,36 @@ def questions_popular(request):
     })
 
 
-@require_GET
 def question_viewer(request, id_question):
-    question = get_object_or_404(Question, id=id_question)
-    answers = get_list_or_404(Answer.objects.from_old_to_new_by_question(question))
-    return render(request, "question.html", {
-        "title": question.title,
-        "question": question,
-        "answers": answers
-    })
+    if request.method == "GET":
+        question = get_object_or_404(Question, id=id_question)
+        answers = get_list_or_404(Answer.objects.from_old_to_new_by_question(question))
+        form_answer = AnswerForm(initial={"question": id_question})
+
+        return render(request, "question.html", {
+            "title": question.title,
+            "question": question,
+            "answers": answers,
+            "form_answer": form_answer
+        })
+    if request.method == "POST":
+        print("question_viewer.POST", request.POST)
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer_form = form.save()
+            return HttpResponseRedirect("/question/" + str(form.cleaned_data["question"]) + "/")
+        else:
+            question = get_object_or_404(Question, id=id_question)
+            answers = get_list_or_404(Answer.objects.from_old_to_new_by_question(question))
+            form_answer = AnswerForm(initial={"question": id_question})
+            return render(request, "question.html", {
+                "title": question.title,
+                "question": question,
+                "answers": answers,
+                "form_answer": form_answer
+            })
+    else:
+        raise Http404()
 
 
 def feedback(request):
