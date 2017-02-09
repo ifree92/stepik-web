@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views.decorators.http import require_GET
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404, get_list_or_404, render
 from django.core.paginator import Paginator, EmptyPage
 from .models import Question, Answer
@@ -55,6 +56,7 @@ def ask(request):
         raise Http404()
 
 
+@csrf_exempt
 def question_viewer(request, id_question):
     if request.method == "GET":
         question = get_object_or_404(Question, id=id_question)
