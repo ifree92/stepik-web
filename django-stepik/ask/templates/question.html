@@ -5,17 +5,43 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ question.title }}</h1>
-    <strong>Date</strong>: {{ question.added_at }}
-    <strong>Rate</strong>: {{ question.rating }}
-    <string>Author:</string>: {{ question.author }}
-    <p>{{ question.text }}</p>
-    <hr>
-    <h2>Comments:</h2>
-    {% for answer in answers %}
-        <strong>Author: </strong>{{ answer.author }}
-        <strong>Date: </strong>{{ answer.added_at }}
-        <p>{{ answer.text }}</p>
-    {% endfor %}
+    <div class="container">
+        <a href="/question/{{ question.id }}/"><h2>{{ question.title }}</h2></a>
+        <div class="row">
+            <div class="col-md-4">
+                <strong>Date</strong>: {{ question.added_at }}
+            </div>
+            <div class="col-md-4">
+                <strong>Rate</strong>: {{ question.rating }}
+            </div>
+            <div class="col-md-4">
+                <strong>Author</strong>: {{ question.author }}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <p>{{ question.text }}</p>
+            </div>
+        </div>
+        <hr>
+        <h2>Comments:</h2>
+        {% for answer in answers %}
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <h3 class="panel-title">{{ answer.author }}</h3>
+                        </div>
+                        <div class="col-md-offset-4 col-md-3 text-right">{{ answer.added_at }}</div>
+                    </div>
+                </div>
+                <div class="panel-body">{{ answer.text }}</div>
+            </div>
+        {% endfor %}
+
+
+    </div>
+
     {{ block.super }}
 {% endblock %}
