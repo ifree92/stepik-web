@@ -43,6 +43,7 @@ def ask(request):
             "ask_form": ask_form
         })
     if request.method == "POST":
+        print("POST ask", request.POST)
         ask_form = AskForm(request.POST)
         if ask_form.is_valid():
             question_id = ask_form.save()
