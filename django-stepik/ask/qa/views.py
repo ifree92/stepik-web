@@ -34,6 +34,7 @@ def questions_popular(request):
     })
 
 
+@csrf_exempt
 def ask(request):
     if request.method == "GET":
         ask_form = AskForm()
