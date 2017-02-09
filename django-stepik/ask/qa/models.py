@@ -11,7 +11,7 @@ class QuestionManager(models.Manager):
     def new_paginator(self, page):
         if int(page) <= 0:
             page = 1
-        qs_questions = get_list_or_404(Question.objects.new())
+        qs_questions = Question.objects.new()
         paginator = Paginator(qs_questions, 10)
         try:
             page = paginator.page(page)
@@ -25,7 +25,7 @@ class QuestionManager(models.Manager):
     def popular_paginator(self, page):
         if int(page) <= 0:
             page = 1
-        qs_questions = get_list_or_404(Question.objects.popular())
+        qs_questions = Question.objects.popular()
         paginator = Paginator(qs_questions, 10)
         try:
             page = paginator.page(page)
@@ -53,7 +53,7 @@ class Answer(models.Model):
     text = models.TextField()
     added_at = models.DateTimeField(blank=True, auto_now_add=True)
     question = models.ForeignKey(Question, null=False, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     objects = AnswerManager()
 
 

@@ -1,6 +1,5 @@
 from django import forms
 from .models import Feedback, Question, Answer
-from django.contrib.auth.models import User
 from django.utils import timezone
 import random
 
@@ -58,8 +57,7 @@ class AskForm(forms.Form):
     def save(self):
         title = self.cleaned_data["title"]
         text = self.cleaned_data["text"]
-        q = Question(title=title, text=text, added_at=timezone.now(), rating=random.randint(0, 100),
-                     author=User.objects.get(id=1))
+        q = Question(title=title, text=text, added_at=timezone.now(), rating=random.randint(0, 100))
         q.save()
         return q.id
 
@@ -84,5 +82,5 @@ class AnswerForm(forms.Form):
         id_question = self.cleaned_data["question"]
         text = self.cleaned_data["text"]
         question = Question.objects.get(id=id_question)
-        answer = Answer(text=text, question=question, author=User.objects.get(id=1))
+        answer = Answer(text=text, question=question)
         answer.save()
