@@ -36,6 +36,7 @@ def questions_popular(request):
 
 @csrf_exempt
 def ask(request):
+    print("ask", request.method)
     if request.method == "GET":
         ask_form = AskForm()
         return render(request, "ask.html", {
@@ -62,6 +63,7 @@ def ask(request):
 
 @csrf_exempt
 def question_viewer(request, id_question):
+    print("question_viewer ", request.method)
     if request.method == "GET":
         question = get_object_or_404(Question, id=id_question)
         answers = Answer.objects.from_old_to_new_by_question(question)
