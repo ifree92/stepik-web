@@ -5,6 +5,9 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 
 
 class QuestionManager(models.Manager):
+
+    items_per_page = 10
+
     def new(self):
         return Question.objects.order_by('-added_at')
 
@@ -12,7 +15,7 @@ class QuestionManager(models.Manager):
         if int(page) <= 0:
             page = 1
         qs_questions = Question.objects.new()
-        paginator = Paginator(qs_questions, 10)
+        paginator = Paginator(qs_questions, self.items_per_page)
         try:
             page = paginator.page(page)
         except EmptyPage:
@@ -26,7 +29,7 @@ class QuestionManager(models.Manager):
         if int(page) <= 0:
             page = 1
         qs_questions = Question.objects.popular()
-        paginator = Paginator(qs_questions, 10)
+        paginator = Paginator(qs_questions, self.items_per_page)
         try:
             page = paginator.page(page)
         except EmptyPage:
