@@ -2,6 +2,7 @@ from django import forms
 from .models import Feedback, Question, Answer
 from django.utils import timezone
 import random
+from django.contrib.auth.models import User
 
 
 class FeedbackForm(forms.Form):
@@ -84,3 +85,51 @@ class AnswerForm(forms.Form):
         question = Question.objects.get(id=id_question)
         answer = Answer(text=text, question=question)
         answer.save()
+
+
+class UserRegister(forms.Form):
+    username = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}), max_length=100)
+    email = forms.EmailField(widget=forms.TextInput(attrs={"class": "form-control"}), max_length=100)
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-control"}), max_length=100)
+
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        if len(username) < 5:
+            raise forms.ValidationError("Username should be longer than 5 symbols")
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if len(email) < 4:
+            raise forms.ValidationError("Email field is not correct")
+        return email
+
+    def clean_password(self):
+        password = self.cleaned_data["password"]
+        if len(password) < 5:
+            raise forms.ValidationError("Password should be longer than 5 symbols")
+        return password
+
+    def save(self):
+        user = User(username=self.cleaned_data["username"], email=self.cleaned_data["email"], password=self.cleaned_data["password"])
+        user.save()
+
+
+class UserLogin(forms.Form):
+    username = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}), max_length=100)
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-control"}), max_length=100)
+
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        if len(username) < 5:
+            raise forms.ValidationError("Username should be longer than 5 symbols")
+        return username
+
+    def clean_password(self):
+        password = self.cleaned_data["password"]
+        if len(password) < 5:
+            raise forms.ValidationError("Password should be longer than 5 symbols")
+        return password
+
+    def get_user(self):
+        return User.objects.get(username=self.cleaned_data["username"], password=self.cleaned_data["password"])

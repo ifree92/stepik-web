@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404, get_list_or_404, render
 from django.core.paginator import Paginator, EmptyPage
 from .models import Question, Answer
-from .forms import FeedbackForm, AnswerForm, AskForm
+from .forms import FeedbackForm, AnswerForm, AskForm, UserRegister, UserLogin
 
 
 @require_GET
@@ -93,6 +93,46 @@ def question_viewer(request, id_question):
             })
     else:
         raise Http404()
+
+
+@csrf_exempt
+def signup(request):
+    if request.method == "GET":
+        register_form = UserRegister()
+        return render(request, "signup.html", {
+            "title": "User's registration",
+            "register_form": register_form
+        })
+    if request.method == "POST":
+        register_form = UserRegister(request.POST)
+        if register_form.is_valid():
+            register_form.save()
+            return HttpResponseRedirect("/")
+        else:
+            return render(request, "signup.html", {
+                "title": "User's registration",
+                "register_form": register_form
+            })
+
+
+@csrf_exempt
+def signin(request):
+    if request.method == "GET":
+        login_form = UserLogin()
+        return render(request, "signin.html", {
+            "title": "User login",
+            "login_form": login_form
+        })
+    if request.method == "POST":
+        login_form = UserLogin(request.POST)
+        if login_form.is_valid():
+            user = login_form.get_user()
+            return HttpResponseRedirect("/")
+        else:
+            return render(request, "signin.html", {
+                "title": "User login",
+                "login_form": login_form
+            })
 
 
 def feedback(request):
