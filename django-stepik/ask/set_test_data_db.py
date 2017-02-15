@@ -40,7 +40,7 @@ def __randomDate(start, end, prop):
 def get_random_datetime():
     return datetime.strptime(
         __randomDate("1/1/2016 1:30 PM", "1/1/2009 4:50 AM", random.random()), '%m/%d/%Y %I:%M %p'
-    ).astimezone(timezone.utc)
+    ).replace(tzinfo=timezone.utc)
 
 
 # =============== /helpers ================
