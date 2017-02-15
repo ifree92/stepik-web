@@ -1,4 +1,4 @@
-# import sys
+#!/usr/bin/env python
 import os
 import django
 import lorem
