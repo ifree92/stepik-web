@@ -27,9 +27,9 @@ urlpatterns = [
     url(r'^question/(?P<id_question>\d+)/$', question_viewer),
     url(r'^ask/', ask),
 
-
     url(r'^login/', signin),
     url(r'^signup/', signup),
+
     url(r'^new/', test),
 
     url(r'^my/(\d+)$', my_test),
