@@ -24,9 +24,11 @@
                 </div>
             {% endfor %}
             <div class="form-actions text-center">
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" class="btn btn-primary">Login</button>
             </div>
         </form>
+        {% include "alert.html" %}
     </div>
+
     {{ block.super }}
 {% endblock %}

@@ -3,6 +3,7 @@ from .models import Feedback, Question, Answer
 from django.utils import timezone
 import random
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class FeedbackForm(forms.Form):
@@ -55,10 +56,10 @@ class AskForm(forms.Form):
     def clean(self):
         return self.cleaned_data
 
-    def save(self):
+    def save(self, user=None):
         title = self.cleaned_data["title"]
         text = self.cleaned_data["text"]
-        q = Question(title=title, text=text, added_at=timezone.now(), rating=random.randint(0, 100))
+        q = Question(title=title, text=text, added_at=timezone.now(), rating=random.randint(0, 100), author=user)
         q.save()
         return q.id
 
@@ -79,11 +80,11 @@ class AnswerForm(forms.Form):
             raise forms.ValidationError("Question is not correct", code="question_error")
         return question
 
-    def save(self):
+    def save(self, user=None):
         id_question = self.cleaned_data["question"]
         text = self.cleaned_data["text"]
         question = Question.objects.get(id=id_question)
-        answer = Answer(text=text, question=question)
+        answer = Answer(text=text, question=question, author=user)
         answer.save()
 
 
@@ -94,15 +95,23 @@ class UserRegister(forms.Form):
 
     def clean_username(self):
         username = self.cleaned_data["username"]
-        if len(username) < 5:
+        if len(username) < 2:
             raise forms.ValidationError("Username should be longer than 5 symbols")
-        return username
+        try:
+            User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            return username
+        raise forms.ValidationError("User is already exists in the system")
 
     def clean_email(self):
         email = self.cleaned_data["email"]
         if len(email) < 4:
             raise forms.ValidationError("Email field is not correct")
-        return email
+        try:
+            User.objects.get(email=email)
+        except ObjectDoesNotExist:
+            return email
+        raise forms.ValidationError("Email is already exists in the system")
 
     def clean_password(self):
         password = self.cleaned_data["password"]
@@ -111,8 +120,10 @@ class UserRegister(forms.Form):
         return password
 
     def save(self):
-        user = User(username=self.cleaned_data["username"], email=self.cleaned_data["email"], password=self.cleaned_data["password"])
+        user = User.objects.create_user(self.cleaned_data["username"], self.cleaned_data["email"], self.cleaned_data[
+            'password'])
         user.save()
+        return user
 
 
 class UserLogin(forms.Form):
@@ -121,8 +132,8 @@ class UserLogin(forms.Form):
 
     def clean_username(self):
         username = self.cleaned_data["username"]
-        if len(username) < 5:
-            raise forms.ValidationError("Username should be longer than 5 symbols")
+        if len(username) < 2:
+            raise forms.ValidationError("Username should be longer than 2 symbols")
         return username
 
     def clean_password(self):
@@ -130,6 +141,3 @@ class UserLogin(forms.Form):
         if len(password) < 5:
             raise forms.ValidationError("Password should be longer than 5 symbols")
         return password
-
-    def get_user(self):
-        return User.objects.get(username=self.cleaned_data["username"], password=self.cleaned_data["password"])

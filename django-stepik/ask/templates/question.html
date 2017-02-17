@@ -42,26 +42,31 @@
 
         <hr>
         <h2>Add answer</h2>
-        <form action="/question/{{ question.id }}/" method="post" class="form-horizontal">
-            {% csrf_token %}
-            {% for hidden in form_answer.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-            {% for field in form_answer.visible_fields %}
-                <div class="form-group">
-                    <label class="col-sm-12">{{ field.label }}</label>
-                    <div class="col-sm-12">{{ field }}</div>
-                    {% if field.errors %}
-                        {% for ferr in field.errors %}
-                            <div class="alert alert-danger">{{ ferr }}</div>
-                        {% endfor %}
-                    {% endif %}
+        {% if user.is_authenticated %}
+            <form action="/question/{{ question.id }}/" method="post" class="form-horizontal">
+                {% csrf_token %}
+                {% for hidden in form_answer.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in form_answer.visible_fields %}
+                    <div class="form-group">
+                        <label class="col-sm-12">{{ field.label }}</label>
+                        <div class="col-sm-12">{{ field }}</div>
+                        {% if field.errors %}
+                            {% for ferr in field.errors %}
+                                <div class="alert alert-danger">{{ ferr }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="form-actions text-center">
+                    <button type="submit" class="btn btn-primary">Publish</button>
                 </div>
-            {% endfor %}
-            <div class="form-actions text-center">
-                <button type="submit" class="btn btn-primary">Publish</button>
-            </div>
-        </form>
+            </form>
+        {% else %}
+            You have not log in. Please <a href="/login/">login</a> to the system
+        {% endif %}
+
     </div>
 
     {{ block.super }}

@@ -6,6 +6,8 @@ from django.shortcuts import get_object_or_404, get_list_or_404, render
 from django.core.paginator import Paginator, EmptyPage
 from .models import Question, Answer
 from .forms import FeedbackForm, AnswerForm, AskForm, UserRegister, UserLogin
+from django.contrib.auth import authenticate, login
+from django.db.utils import IntegrityError
 
 
 @require_GET
@@ -36,7 +38,8 @@ def questions_popular(request):
 
 @csrf_exempt
 def ask(request):
-    print("ask", request.method)
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("/login/")
     if request.method == "GET":
         ask_form = AskForm()
         return render(request, "ask.html", {
@@ -44,15 +47,12 @@ def ask(request):
             "ask_form": ask_form
         })
     if request.method == "POST":
-        print("POST ask", request.POST)
         ask_form = AskForm(request.POST)
         if ask_form.is_valid():
-            print("POST ask is VALID")
-            question_id = ask_form.save()
+            question_id = ask_form.save(user=request.user)
             return HttpResponseRedirect("/question/" + str(question_id) + "/")
         else:
             ask_form = AskForm()
-            print("POST ask is INVALID")
             return render(request, "ask.html", {
                 "title": "Ask a question",
                 "ask_form": ask_form
@@ -63,7 +63,6 @@ def ask(request):
 
 @csrf_exempt
 def question_viewer(request, id_question):
-    print("question_viewer ", request.method)
     if request.method == "GET":
         question = get_object_or_404(Question, id=id_question)
         answers = Answer.objects.from_old_to_new_by_question(question)
@@ -73,13 +72,17 @@ def question_viewer(request, id_question):
             "title": question.title,
             "question": question,
             "answers": answers,
-            "form_answer": form_answer
+            "form_answer": form_answer,
+            "user": request.user
         })
     if request.method == "POST":
-        print("question_viewer.POST", request.POST)
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect("/login/")
         form = AnswerForm(request.POST)
         if form.is_valid():
-            answer_form = form.save()
+            # form.set_user(request.user)
+            answer_form = form.save(user=request.user)
+
             return HttpResponseRedirect("/question/" + str(form.cleaned_data["question"]) + "/")
         else:
             question = get_object_or_404(Question, id=id_question)
@@ -89,7 +92,8 @@ def question_viewer(request, id_question):
                 "title": question.title,
                 "question": question,
                 "answers": answers,
-                "form_answer": form_answer
+                "form_answer": form_answer,
+                "user": request.user
             })
     else:
         raise Http404()
@@ -106,7 +110,8 @@ def signup(request):
     if request.method == "POST":
         register_form = UserRegister(request.POST)
         if register_form.is_valid():
-            register_form.save()
+            user = register_form.save()
+            login(request, user)
             return HttpResponseRedirect("/")
         else:
             return render(request, "signup.html", {
@@ -126,8 +131,17 @@ def signin(request):
     if request.method == "POST":
         login_form = UserLogin(request.POST)
         if login_form.is_valid():
-            user = login_form.get_user()
-            return HttpResponseRedirect("/")
+            user = authenticate(username=login_form.cleaned_data["username"],
+                                password=login_form.cleaned_data["password"])
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect("/")
+            else:
+                return render(request, "signin.html", {
+                    "title": "User login",
+                    "login_form": login_form,
+                    "alerts": {"danger": ["Incorrect login or password"]}
+                })
         else:
             return render(request, "signin.html", {
                 "title": "User login",
@@ -137,7 +151,6 @@ def signin(request):
 
 def feedback(request):
     if request.method == "POST":
-        print("request.POST", request.POST)
         form = FeedbackForm(request.POST)
         if form.is_valid():
             feedback_post = form.save()

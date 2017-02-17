@@ -1,0 +1,22 @@
+{% if alerts %}
+    {% if alerts.success %}
+        {% for alert in alerts.success %}
+            <div class="alert alert-success" role="alert">{{ alert }}</div>
+        {% endfor %}
+    {% endif %}
+    {% if alerts.info %}
+        {% for alert in alerts.info %}
+            <div class="alert alert-info" role="alert">{{ alert }}</div>
+        {% endfor %}
+    {% endif %}
+    {% if alerts.warning %}
+        {% for alert in alerts.warning %}
+            <div class="alert alert-warning" role="alert">{{ alert }}</div>
+        {% endfor %}
+    {% endif %}
+    {% if alerts.danger %}
+        {% for alert in alerts.danger %}
+            <div class="alert alert-danger" role="alert">{{ alert }}</div>
+        {% endfor %}
+    {% endif %}
+{% endif %}
