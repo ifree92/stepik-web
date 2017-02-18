@@ -111,8 +111,17 @@ def signup(request):
         register_form = UserRegister(request.POST)
         if register_form.is_valid():
             user = register_form.save()
-            login(request, user)
-            return HttpResponseRedirect("/")
+            auth_user = authenticate(username=register_form.cleaned_data["username"],
+                                     password=register_form.cleaned_data["password"])
+            if auth_user is not None:
+                login(request, auth_user)
+                return HttpResponseRedirect("/")
+            else:
+                return render(request, "signup.html", {
+                    "title": "User's registration",
+                    "register_form": register_form,
+                    "alerts": {"danger": ["Cannot authenticate your registered user"]}
+                })
         else:
             return render(request, "signup.html", {
                 "title": "User's registration",
