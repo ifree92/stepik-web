@@ -1,4 +1,4 @@
 .idea
 django-stepik/.idea
-django-stepik/ask/ask/__pycache__*
 django-stepik/ask/debug.log
+*__pycache__*
