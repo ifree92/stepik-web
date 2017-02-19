@@ -8,6 +8,8 @@ from .models import Question, Answer
 from .forms import FeedbackForm, AnswerForm, AskForm, UserRegister, UserLogin
 from django.contrib.auth import authenticate, login
 from django.db.utils import IntegrityError
+from django.core import serializers
+from ask.ajax import HttpResponseAjax, HttpResponseAjaxError
 
 
 @require_GET
@@ -180,3 +182,19 @@ def feedback(request):
 
 def test(request, num=""):
     return HttpResponse("<b>OK</b> " + num)
+
+
+@require_GET
+def get_posts_ajax(request):
+    questions = Question.objects.all()
+    qlist = []
+    for question in questions:
+        qlist.append({
+            "title": question.title,
+            "added_at": str(question.added_at),
+            "text": question.text,
+            "rating": question.rating,
+            "author": str(question.author),
+            "likes": str(question.likes)
+        })
+    return HttpResponseAjax(data=qlist)

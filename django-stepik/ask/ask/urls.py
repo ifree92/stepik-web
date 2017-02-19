@@ -15,8 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 # from django.contrib import admin
-from ask.views import test, my_test
-from qa.views import questions_main_newer, questions_popular, question_viewer, feedback, ask, signup, signin
+from qa.views import questions_main_newer, questions_popular, question_viewer, feedback, ask, signup, signin, get_posts_ajax
 
 
 urlpatterns = [
@@ -30,9 +29,7 @@ urlpatterns = [
     url(r'^login/', signin),
     url(r'^signup/', signup),
 
-    url(r'^new/', test),
-
-    url(r'^my/(\d+)$', my_test),
-    url(r'^my2/(?P<pk>\d+)$', my_test),
     url(r'feedback/$', feedback),
+
+    url(r'^api/v1/get_questions/', get_posts_ajax)
 ]
