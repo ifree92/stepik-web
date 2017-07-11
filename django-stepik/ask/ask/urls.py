@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 # from django.contrib import admin
 from qa.views import questions_main_newer, questions_popular, question_viewer, feedback, ask, signup, signin, get_posts_ajax
-
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -33,3 +33,5 @@ urlpatterns = [
 
     url(r'^api/v1/get_questions/', get_posts_ajax)
 ]
+
+urlpatterns += staticfiles_urlpatterns()

@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  
+  mysqlhost:
+    image: mysql
+    environment:
+    - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    - MYSQL_DATABASE=test_db
+
+  qa:
+    build: .
+    depends_on:
+     - mysqlhost
+    ports:
+     - "8000:8000"
+    command: bash -c "./wait-for-it.sh && python manage.py migrate && gunicorn -b 0.0.0.0:8000 ask.wsgi"

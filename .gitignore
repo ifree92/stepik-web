@@ -1,5 +1,6 @@
 .idea
 django-stepik/.idea
 django-stepik/ask/debug.log
+django-stepik/debug.log
 *.pyo
 *.pyc
